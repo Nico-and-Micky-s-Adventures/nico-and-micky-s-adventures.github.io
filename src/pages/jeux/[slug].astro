@@ -1,0 +1,12 @@
+---
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+    const games = await getCollection('jeux');
+
+    return games.map((game) => ({
+        params: { slug: game.data.slug },
+        props: { game },
+    }));
+}
+---

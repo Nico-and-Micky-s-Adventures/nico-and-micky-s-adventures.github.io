@@ -1,15 +1,71 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const captures = await getCollection('images');
+const capture = captures[Math.floor(Math.random() * captures.length)];
+const { Content } = await render(capture);
+const imageAssets = import.meta.glob('../assets/**/*.{png,jpg,jpeg,webp,svg}', {
+	eager: true,
+	query: '?url',
+	import: 'default',
+}) as Record<string, string>;
+const imagePath = capture.data.image.replace('../../assets', '../assets');
+const imageUrl = imageAssets[imagePath];
 ---
 
 <Layout>
 	<Header />
-	<Welcome />
+	<main class="capture">
+		<div class="capture-content">
+			<div class="capture-description">
+				<h1>{capture.data.title} - {capture.data.game}</h1>
+				<article>
+					<Content />
+				</article>
+			</div>
+			<img src={imageUrl} alt={capture.data.shortDescription} />
+		</div>
+	</main>
 	<Footer />
 </Layout>
+
+<style>
+	.capture {
+		width: 90%;
+		margin: 2rem auto 4rem;
+	}
+
+	.capture-content {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 4rem;
+		align-items: start;
+	}
+
+	.capture-description h1 {
+		margin: 0 0 2rem;
+		text-align: left;
+	}
+
+	article {
+		font-size: 1.15rem;
+		line-height: 1.6;
+	}
+
+	img {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	@media (max-width: 700px) {
+		.capture-content {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+		}
+
+	}
+</style>

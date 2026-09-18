@@ -14,7 +14,7 @@ import background from '../assets/background.svg';
                 <a class="header-link" href=""> Galerie </a>
             </section>
             <section id="burger">
-                <button type="button" aria-label="Ouvrir le menu">
+                <button type="button" aria-label="Ouvrir le menu" aria-controls="side-menu" aria-expanded="false">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -24,6 +24,38 @@ import background from '../assets/background.svg';
 	</main>
     <div id="ligne"></div>
 </div>
+
+<nav id="side-menu" aria-label="Menu secondaire" aria-hidden="true" inert>
+    <a href="#a-propos">A propos</a>
+    <a href="#projets-irl">Projets IRL</a>
+    <a href="#livre-jeux">Livre de jeux possédés</a>
+    <a href="#rocketwatch">RocketWatch</a>
+</nav>
+
+<script>
+    const burger = document.querySelector<HTMLButtonElement>('#burger button');
+    const sideMenu = document.querySelector<HTMLElement>('#side-menu');
+
+    if (burger && sideMenu) {
+        const setMenuState = (isOpen: boolean) => {
+            burger.setAttribute('aria-expanded', String(isOpen));
+            burger.setAttribute('aria-label', isOpen ? 'Fermer le menu' : 'Ouvrir le menu');
+            sideMenu.setAttribute('aria-hidden', String(!isOpen));
+            sideMenu.toggleAttribute('inert', !isOpen);
+            sideMenu.classList.toggle('is-open', isOpen);
+        };
+
+        burger.addEventListener('click', () => {
+            setMenuState(burger.getAttribute('aria-expanded') !== 'true');
+        });
+
+        sideMenu.addEventListener('click', (event) => {
+            if (event.target instanceof HTMLAnchorElement) {
+                setMenuState(false);
+            }
+        });
+    }
+</script>
 
 <style>
 	#background {
@@ -68,6 +100,8 @@ import background from '../assets/background.svg';
 		flex-direction: row;
 		justify-content: right;
         margin: 1% 5% 1% 0;
+        position: relative;
+        z-index: 2;
     }
 
     #burger button {
@@ -89,6 +123,37 @@ import background from '../assets/background.svg';
         height: 3px;
         border-radius: 999px;
         background-color: black;
+    }
+
+    #side-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        width: 20%;
+        height: 100vh;
+        padding: 8rem 2rem 2rem;
+        box-sizing: border-box;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(100%);
+        transition: opacity 180ms ease, transform 180ms ease;
+        z-index: 1;
+    }
+
+    #side-menu.is-open {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(0);
+    }
+
+    #side-menu a {
+        font-size: 1.25rem;
+        text-align: center;
+        text-decoration: none;
     }
     
     #ligne {

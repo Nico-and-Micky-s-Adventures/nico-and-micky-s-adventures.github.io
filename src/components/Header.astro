@@ -14,7 +14,11 @@ import background from '../assets/background.svg';
                 <a class="header-link" href=""> Galerie </a>
             </section>
             <section id="burger">
-                <a class="header-link" href=""> ≡ </a>
+                <button type="button" aria-label="Ouvrir le menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </section>
 		</section>
 	</main>
@@ -64,7 +68,27 @@ import background from '../assets/background.svg';
 		flex-direction: row;
 		justify-content: right;
         margin: 1% 5% 1% 0;
-        font-size: xx-large;
+    }
+
+    #burger button {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 2.5rem;
+        height: 2rem;
+        flex-shrink: 0;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+    }
+
+    #burger button span {
+        display: block;
+        width: 100%;
+        height: 3px;
+        border-radius: 999px;
+        background-color: black;
     }
     
     #ligne {
